@@ -32,4 +32,24 @@ public class CourseService {
             return null;
         }
     }
+
+    // update course
+    public Optional<Course> updateCourse(long id, Course updatedCourse) {
+        Optional<Course> existingCourse = this.courseRepository.findById(id);
+        if(existingCourse.isPresent()) {
+            Course course = existingCourse.get();
+            course.setAvgGrade(updatedCourse.getAvgGrade());
+            course.setName(updatedCourse.getName());
+            course.setDescription(updatedCourse.getDescription());
+            return Optional.of(this.courseRepository.save(course));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    // delete course
+    public void deleteCourseById(long id) {
+        this.courseRepository.deleteById(id);
+    }
+
 }

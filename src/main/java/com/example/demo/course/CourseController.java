@@ -1,8 +1,10 @@
 package com.example.demo.course;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("course")
@@ -29,5 +31,19 @@ public class CourseController {
     @PostMapping
     public Course addNewCourse(@RequestBody Course course) {
         return this.courseService.saveCourse(course);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<?> updateCourse(@PathVariable long id, @RequestBody Course course) {
+        Optional<Course> optionalCourse = this.courseService.updateCourse(id, course);
+        if(optionalCourse.isPresent()) {
+            return ResponseEntity.ok(optionalCourse.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteCourseById(@PathVariable long id) {
+        this.courseService.deleteCourseById(id);
     }
 }
