@@ -2,6 +2,7 @@ package com.example.demo.course;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,34 +15,40 @@ public class CourseService {
     }
 
     // add a course (create)
-    public Course saveCourse(Course course) {
-        return this.courseRepository.save(course);
+    public CourseDTO saveCourse(Course course) {
+        return new CourseDTO(this.courseRepository.save(course));
     }
 
     // getting all courses (read)
-    public List<Course> getAllCourses() {
-        return (List<Course>) this.courseRepository.findAll();
+    public List<CourseDTO> getAllCourses() {
+        List<CourseDTO> courseDTOS = new ArrayList<>();
+        List<Course> courses = (List<Course>) this.courseRepository.findAll();
+
+        for(Course course : courses) {
+            courseDTOS.add(new CourseDTO(course));
+        }
+        return courseDTOS;
     }
 
     // get course by id (read)
-    public Course getCourseById(long id) {
+    public CourseDTO getCourseById(long id) {
         Optional<Course> optionalCourse = this.courseRepository.findById(id);
         if(optionalCourse.isPresent()) {
-            return optionalCourse.get();
+            return new CourseDTO(optionalCourse.get());
         } else {
             return null;
         }
     }
 
     // update course
-    public Optional<Course> updateCourse(long id, Course updatedCourse) {
+    public Optional<CourseDTO> updateCourse(long id, Course updatedCourse) {
         Optional<Course> existingCourse = this.courseRepository.findById(id);
         if(existingCourse.isPresent()) {
             Course course = existingCourse.get();
             course.setAvgGrade(updatedCourse.getAvgGrade());
             course.setName(updatedCourse.getName());
             course.setDescription(updatedCourse.getDescription());
-            return Optional.of(this.courseRepository.save(course));
+            return Optional.of(new CourseDTO(this.courseRepository.save(course)));
         } else {
             return Optional.empty();
         }

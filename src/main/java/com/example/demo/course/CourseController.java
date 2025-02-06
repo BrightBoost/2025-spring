@@ -17,25 +17,25 @@ public class CourseController {
 
     // getting all the courses
     @GetMapping
-    public List<Course> getCourses() {
+    public List<CourseDTO> getCourses() {
         return this.courseService.getAllCourses();
     }
 
     // get a single course by id
     @GetMapping("{id}")
-    public Course getCourseById(@PathVariable long id) {
+    public CourseDTO getCourseById(@PathVariable long id) {
         return this.courseService.getCourseById(id);
     }
 
     // adding a new course
     @PostMapping
-    public Course addNewCourse(@RequestBody Course course) {
+    public CourseDTO addNewCourse(@RequestBody Course course) {
         return this.courseService.saveCourse(course);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> updateCourse(@PathVariable long id, @RequestBody Course course) {
-        Optional<Course> optionalCourse = this.courseService.updateCourse(id, course);
+        Optional<CourseDTO> optionalCourse = this.courseService.updateCourse(id, course);
         if(optionalCourse.isPresent()) {
             return ResponseEntity.ok(optionalCourse.get());
         }
